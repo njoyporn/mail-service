@@ -1,0 +1,24 @@
+services:
+  njoy-mail-service:
+    env_file: ".env"
+    image: njoy-mail-service
+    container_name: ${CONTAINER_NAME}
+    restart: always
+    volumes: 
+      - /${VOLUME}/njoy-mail-service/config:/njoy-mail-service/config
+      - /${VOLUME}/njoy-mail-service/keys:/njoy-mail-service/backend_shared/security/.keys
+      - /${VOLUME}/njoy-mail-service/logs:/njoy-mail-service/logs
+    ports:
+      - ${API_PORT}:${API_PORT}
+
+  db:
+    env_file: ".env"
+    image: mariadb:10.2
+    restart: always
+    volumes:
+      - /${VOLUME}/njoy-mail-service/database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_HOST: ${MYSQL_ROOT_HOST}
+    ports:
+      - ${DB_PORT}:3306
